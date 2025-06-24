@@ -25,3 +25,16 @@ class User(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<i am user number {self.id} and my name is {self.name} >"
+    
+
+class Blog(db.Model, SerializerMixin):
+    __tablename__ = 'blogs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    image_url = db.Column(db.String)
+    bio = db.Column(db.String, nullable=False )
+
+    
+
+
