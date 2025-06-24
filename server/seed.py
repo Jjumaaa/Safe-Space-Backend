@@ -10,14 +10,14 @@ app = create_app()
 def seed():
     with app.app_context():
         db.create_all()
-        print("🌱 Seeding typshii...")
+        print(" Seeding typshii...")
 
-        # Clear tables
+        
         Blog.query.delete()
         User.query.delete()
         Tag.query.delete()
 
-        # Create users
+        
         users = []
         for _ in range(15):
             user = User(
@@ -28,7 +28,7 @@ def seed():
             users.append(user)
             db.session.add(user)
 
-        # Create tags
+        
         tags = []
         for _ in range(15):
             tag = Tag(name=fake.word().capitalize())
@@ -37,7 +37,7 @@ def seed():
 
         db.session.commit()
 
-        # Create blogs
+        
         for _ in range(15):
             blog = Blog(
                 title=fake.sentence(nb_words=5),
@@ -50,7 +50,7 @@ def seed():
 
         db.session.commit()
 
-        print("✅ Done seeding typshii!")
+        print("Done seeding typshii!")
 
 if __name__ == "__main__":
     seed()
