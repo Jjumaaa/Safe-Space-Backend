@@ -42,7 +42,27 @@ class Blog(db.Model, SerializerMixin):
     created_at = db.column (db.String, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.Foreignkey("user.id)" ))
 
-    tags = relationship("tags" )
+    tags = relationship("Tag", secondary="article_tags", back_populates="blogs")
+
+
+class Tag(db.Model, SerializerMixin):
+    __tablename__ = 'tags'
+
+
+    id= db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+    articles = db.relationship("Article", secondary="article_tags", back_populates="tags")
+
+
+
+
+article_tags = db.Table("article_tags",
+                        db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True),
+                        db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True))
+
+
+
+
 
 
 
@@ -57,11 +77,6 @@ class Blog(db.Model, SerializerMixin):
   
   
   
-   #user
-   # #article
-   # # tag
-   # # articletags 
-
-
+  
 
 
