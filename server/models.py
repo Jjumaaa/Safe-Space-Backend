@@ -1,7 +1,8 @@
-from sqlalchemy.orm import validates, relationship
+from sqlalchemy.orm import validates, relationship, Foreignkey
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 from config import db, bcrypt
+from datetime import datetime
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -10,7 +11,9 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String, unique=True, nullable=True)
-    _password_hash = db.Column(db.String, nullable=True)   
+    password_hash = db.Column(db.String, nullable=True) 
+
+    blogs = relationship("Blog", backref="users", cascade='all, delete-orphan')  
 
     
    
@@ -36,6 +39,15 @@ class Blog(db.Model, SerializerMixin):
     title = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String)
     bio = db.Column(db.String, nullable=False)
+    created_at = db.column (db.String, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.Foreignkey("user.id)" ))
+
+    tags = relationship("tags" )
+
+
+
+
+
 
 
 
