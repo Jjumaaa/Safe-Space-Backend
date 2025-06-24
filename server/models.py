@@ -9,7 +9,9 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
+    email = db.Column(db.String, unique=True, nullable=True)
     _password_hash = db.Column(db.String, nullable=True)   
+
     
    
     @hybrid_property
@@ -33,8 +35,21 @@ class Blog(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String)
-    bio = db.Column(db.String, nullable=False )
+    bio = db.Column(db.String, nullable=False)
 
-    
+
+
+  
+  
+  
+  
+  
+  
+   #user
+   # #article
+   # # tag
+   # # articletags 
+
+
 
 
