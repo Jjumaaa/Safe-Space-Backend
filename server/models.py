@@ -13,7 +13,15 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String, unique=True, nullable=True)
     _password_hash = db.Column(db.String, nullable=True) 
 
-    blogs = relationship("Blog", backref="user", cascade='all, delete-orphan')  
+    blogs = relationship("Blog", backref="user", cascade='all, delete-orphan')
+
+    @validates('email')
+    def validate_email(self, key, email):
+        if email:
+            if '@' not in email or '.' not in email:
+                raise ValueError("Please provide a valid email address.")
+        return email
+    
 
     @hybrid_property
     def password_hash(self):
