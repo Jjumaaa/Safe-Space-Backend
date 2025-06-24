@@ -3,12 +3,10 @@ from flask_migrate import Migrate
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, get_jwt_identity
 )
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_restful import Api
 
 from config import db
 from models import User, Blog, Tag
-from schemas import user_schema, users_schema, blog_schema, blogs_schema, tag_schema, tags_schema
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -21,7 +19,6 @@ migrate = Migrate(app, db)
 api = Api(app)
 jwt = JWTManager(app)
 
-
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
@@ -29,41 +26,42 @@ def register():
         return jsonify({"message": "Username already exists"}), 409
     new_user = User(
         username=data['username'],
-        email=data['email'],
-        password=generate_password_hash(data['password'])
+        email=data['email']
     )
+    new_user.password_hash = data['password']
     db.session.add(new_user)
     db.session.commit()
-    return user_schema.jsonify(new_user), 201
+    return jsonify(new_user.to_dict()), 201
 
 
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
-    if user and check_password_hash(user.password, data['password']):
+    if user and user.authenticate(data['password']):
         access_token = create_access_token(identity=user.id)
         return jsonify(access_token=access_token)
     return jsonify({"message": "Invalid credentials"}), 401
+
 
 @app.route('/me', methods=['GET'])
 @jwt_required()
 def me():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    return user_schema.jsonify(user)
+    return jsonify(user.to_dict())
 
 
 @app.route('/blogs', methods=['GET'])
 def get_blogs():
     blogs = Blog.query.all()
-    return blogs_schema.jsonify(blogs)
+    return jsonify([blog.to_dict() for blog in blogs])
 
 
 @app.route('/blogs/<int:id>', methods=['GET'])
 def get_blog(id):
     blog = Blog.query.get_or_404(id)
-    return blog_schema.jsonify(blog)
+    return jsonify(blog.to_dict())
 
 
 @app.route('/blogs', methods=['POST'])
@@ -73,12 +71,13 @@ def create_blog():
     data = request.json
     new_blog = Blog(
         title=data['title'],
-        content=data['content'],
+        image_url=data.get('image_url'),
+        bio=data['bio'],
         user_id=user_id
     )
     db.session.add(new_blog)
     db.session.commit()
-    return blog_schema.jsonify(new_blog), 201
+    return jsonify(new_blog.to_dict()), 201
 
 
 @app.route('/blogs/<int:id>', methods=['PATCH'])
@@ -91,10 +90,12 @@ def update_blog(id):
     data = request.json
     if 'title' in data:
         blog.title = data['title']
-    if 'content' in data:
-        blog.content = data['content']
+    if 'bio' in data:
+        blog.bio = data['bio']
+    if 'image_url' in data:
+        blog.image_url = data['image_url']
     db.session.commit()
-    return blog_schema.jsonify(blog)
+    return jsonify(blog.to_dict())
 
 
 @app.route('/blogs/<int:id>', methods=['DELETE'])
@@ -112,7 +113,7 @@ def delete_blog(id):
 @app.route('/tags', methods=['GET'])
 def get_tags():
     tags = Tag.query.all()
-    return tags_schema.jsonify(tags)
+    return jsonify([tag.to_dict() for tag in tags])
 
 
 @app.route('/tags', methods=['POST'])
@@ -122,13 +123,13 @@ def create_tag():
     new_tag = Tag(name=data['name'])
     db.session.add(new_tag)
     db.session.commit()
-    return tag_schema.jsonify(new_tag), 201
+    return jsonify(new_tag.to_dict()), 201
 
 
 @app.route('/tags/<int:id>', methods=['GET'])
 def get_tag(id):
     tag = Tag.query.get_or_404(id)
-    return tag_schema.jsonify(tag)
+    return jsonify(tag.to_dict())
 
 
 @app.route('/tags/<int:id>', methods=['DELETE'])
@@ -143,13 +144,13 @@ def delete_tag(id):
 @app.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
     user = User.query.get_or_404(id)
-    return user_schema.jsonify(user)
+    return jsonify(user.to_dict())
 
 
 @app.route('/users/<int:id>/blogs', methods=['GET'])
 def get_user_blogs(id):
     blogs = Blog.query.filter_by(user_id=id).all()
-    return blogs_schema.jsonify(blogs)
+    return jsonify([blog.to_dict() for blog in blogs])
 
 if __name__ == '__main__':
-    app.run(port=5555,debug=True)
+    app.run(port=5555, debug=True)
