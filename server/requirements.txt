@@ -1,3 +1,13 @@
+faker
+sqlalchemy-serializer
+ipdb
+importlib-resources
+importlib-metadata
+werkzeug
+flask-sqlalchemy
+flask-migrate
+flask
+alembic
 alembic==1.14.1
 aniso8601==10.0.1
 asttokens==3.0.0
