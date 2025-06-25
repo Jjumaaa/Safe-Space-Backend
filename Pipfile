@@ -14,9 +14,6 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask = "*"
 alembic = "*"
-flask-jwt-extended = "*"
-flask-restful = "*"
-flask-bcrypt = "*"
 
 [dev-packages]
 

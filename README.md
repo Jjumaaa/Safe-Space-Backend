@@ -1,78 +1,160 @@
 ## Safe-Space-Group-Project-Backend
 
-This is the backend for a blog application built with Flask, SQLAlchemy, and Alembic for database migrations. It includes user authentication, blog creation, and tagging features.
 
-## 📁 Project Structure
+A **Flask REST API** 
+for managing users, blogs , and tags 
 
-.
-├── README.md
-└── server
-├── Pipfile # Python dependencies
-├── Pipfile.lock
-├── alembic/ # Alembic migrations (legacy or alternative to 'migrations/')
-├── alembic.ini # Alembic configuration
-├── app.db # SQLite database file
-├── app.py # Flask app entry point
-├── config.py # Configuration settings
-├── migrations/ # Alembic-generated migration scripts
-├── models.py # SQLAlchemy models for User, Blog, and Tag
-└── seed.py # Script for populating the database with sample data
+## Setup
 
+1. Clone the repository at:
 
+   ```bash
+   https://github.com/Jjumaaa/Safe-Space-Group-Project-Backend
+   Then, cd Safe-Space-Group-Project-Backend
+   ```
+2. Install dependencies:
 
-## Setup Instructions
+   ```bash
+   pipenv install
+   pipenv shell
+   ```
 
-1. Clone the Repository
-git clone git@github.com:Jjumaaa/Safe-Space-Group-Project-Backend.git
-cd Safe-Space-Group-Project-Backend/server
+## Environment Variables
 
-2. Create and Activate Virtual Environment
+Create a `.env` file:
 
-pipenv install
-pipenv shell
+```bash
+FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=super-secret-key
+DATABASE_URL=sqlite:///app.db
+```
 
-3. Run Database Migrations
+## Dependencies
 
-flask db upgrade
-If you haven’t initialized migrations yet:
+Install them with =pipenv "The dependency you want"
 
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
+* flask
+* flask-sqlalchemy
+* flask-migrate
+* flask-jwt-extended
+* psycopg2-binary
+* pipenv
+* shell
+* faker
+* alembic
+* flask-cors
+* sqlalchemy
+* serializer
+* sqlalchemy-serializer
+* flask-bcrypt
+* flask-restful
 
-4. Seed the Database
+## Database Migrations
 
+```bash
+alembic init alembic
+alembic revision --autogenerate -m "created all tables"
+alembic upgrade head
+```
+
+## Seeding the Database
+
+```bash
 python seed.py
- ## Running the App
+```
 
-flask run
-By default, the app runs on:
-http://127.0.0.1:5000/
+## Run the Server
 
-## Features
-User registration with secure password hashing
+```bash
+python app.py
+```
 
-Blog creation and assignment to users
+## Authentication Flow
 
-Blog tagging using many-to-many relationships
+* **Register:** `POST /register`
+* **Login:** `POST /login` (returns a JWT token)
 
-Alembic-based database migrations
+Use the returned `token` in requests:
 
-Seed script with realistic fake data (via Faker)
+```
+Authorization: Bearer <your_jwt_token_here>
+```
 
- ## Technologies Used
-Python 3.8+
+## Available Routes
+Here are the routes defined in your Flask app:
 
-Flask
+**User Authentication Routes:**
 
-SQLAlchemy
+* `POST /register` – Register a new user.
+* `POST /login` – Login a user and return a JWT.
+* `GET /me` – Get the currently authenticated user's details.
 
-Flask-Migrate (Alembic)
+**Blog Routes:**
 
-Flask-Bcrypt
+* `GET /blogs` – Get all blogs.
+* `GET /blogs/<int:id>` – Get a single blog by ID.
+* `POST /blogs` – Create a new blog (requires authentication).
+* `PATCH /blogs/<int:id>` – Update a blog by ID (requires authentication and ownership).
+* `DELETE /blogs/<int:id>` – Delete a blog by ID (requires authentication and ownership).
 
-Faker
+**Tag Routes:**
 
-## Authors
-Primrose 
-Cristina
+* `GET /tags` – Get all tags.
+* `POST /tags` – Create a new tag (requires authentication).
+* `GET /tags/<int:id>` – Get a single tag by ID.
+* `DELETE /tags/<int:id>` – Delete a tag by ID (requires authentication).
+
+**User Info Routes:**
+
+* `GET /users/<int:id>` – Get a user's information by ID.
+* `GET /users/<int:id>/blogs` – Get all blogs created by a specific user.
+
+
+## Thunderclient Guide!
+
+Use Thunderclient to test endpoints 
+
+## GitHub Repository
+
+[https://github.com/Jjumaaa/Safe-Space-Group-Project-Backend](https://github.com/Jjumaaa/Safe-Space-Group-Project-Backend)
+
+
+## registering a new user
+![alt text](screenshots/registeruser.png) 
+
+## login and get the JW token
+
+![alt text](screenshots/loginuser.png) 
+
+## using the jw- token ... getting user's info 
+
+![alt text](screenshots/getinfoonuser.png)  
+
+## created a blog 
+![alt text](screenshots/creatingablog.png) 
+
+## getting all blogs 
+
+![alt text](screenshots/getallblogstrue.png) 
+
+## getting a single blog
+![alt text](screenshots/getblogsbyid.png) 
+
+## trying to update a blog usinga an expired token but getting an error "unauthorized"
+
+![alt text](screenshots/getblogsforauserbyidunauthorized.png)
+
+##  get users blogs by id 
+![alt text](screenshots/getauser'sblogsbyid.png)
+
+##  creating tags for a logged in user
+![alt text](screenshots/creatingatag.png) 
+
+##  creating a new blog for a user
+![alt text](screenshots/creatingablog.png) 
+
+
+#### Github repository
+
+##(https://github.com/Jjumaaa/Safe-Space-Group-Project-Backend)
