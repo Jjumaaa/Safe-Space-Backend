@@ -1,30 +1,78 @@
 ## Safe-Space-Group-Project-Backend
 
-![alt text](image.png) -- registering a new user
+This is the backend for a blog application built with Flask, SQLAlchemy, and Alembic for database migrations. It includes user authentication, blog creation, and tagging features.
 
-![alt text](image-1.png) -- login and get the JW token
+## 📁 Project Structure
 
-![alt text](image-2.png) --- using the jw- token ... getting user's info 
-![alt text](image-3.png) -- created a blog 
-
-![alt text](image-4.png) --- getting all blogs 
-
-
-![alt text](image-5.png) -- getting a single blog
-
-![alt text](image-6.png) -- trying to update a blog usinga an expired token but getting an error "unauthorized"
-
-![alt text](image-7.png) -- get users blogs
-
-![alt text](image-8.png) -- get users by id
-
-![alt text](image-9.png) -- get my info 
-
-![alt text](image-10.png) --- creating a blog for  a user 
-
-![alt text](image-11.png) ---- creating tags for a logged in user
+.
+├── README.md
+└── server
+├── Pipfile # Python dependencies
+├── Pipfile.lock
+├── alembic/ # Alembic migrations (legacy or alternative to 'migrations/')
+├── alembic.ini # Alembic configuration
+├── app.db # SQLite database file
+├── app.py # Flask app entry point
+├── config.py # Configuration settings
+├── migrations/ # Alembic-generated migration scripts
+├── models.py # SQLAlchemy models for User, Blog, and Tag
+└── seed.py # Script for populating the database with sample data
 
 
 
+## Setup Instructions
 
+1. Clone the Repository
+git clone git@github.com:Jjumaaa/Safe-Space-Group-Project-Backend.git
+cd Safe-Space-Group-Project-Backend/server
 
+2. Create and Activate Virtual Environment
+
+pipenv install
+pipenv shell
+
+3. Run Database Migrations
+
+flask db upgrade
+If you haven’t initialized migrations yet:
+
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+
+4. Seed the Database
+
+python seed.py
+ ## Running the App
+
+flask run
+By default, the app runs on:
+http://127.0.0.1:5000/
+
+## Features
+User registration with secure password hashing
+
+Blog creation and assignment to users
+
+Blog tagging using many-to-many relationships
+
+Alembic-based database migrations
+
+Seed script with realistic fake data (via Faker)
+
+ ## Technologies Used
+Python 3.8+
+
+Flask
+
+SQLAlchemy
+
+Flask-Migrate (Alembic)
+
+Flask-Bcrypt
+
+Faker
+
+## Authors
+Primrose 
+Cristina
