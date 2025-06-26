@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app, 
      origins=[
          "http://localhost:3000", 
-         "https://safe-space-frontend.vercel.app"
+         "https://safe-space-frontend.onrender.com/"
      ],
      supports_credentials=True)
 
