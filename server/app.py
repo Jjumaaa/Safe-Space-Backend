@@ -7,6 +7,7 @@ from flask_restful import Api
 
 from config import db
 from models import User, Blog, Tag
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -33,7 +34,6 @@ def register():
     db.session.commit()
     return jsonify(new_user.to_dict()), 201
 
-
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -43,7 +43,6 @@ def login():
         return jsonify(access_token=access_token)
     return jsonify({"message": "Invalid credentials"}), 401
 
-
 @app.route('/me', methods=['GET'])
 @jwt_required()
 def me():
@@ -51,18 +50,15 @@ def me():
     user = User.query.get(user_id)
     return jsonify(user.to_dict())
 
-
 @app.route('/blogs', methods=['GET'])
 def get_blogs():
     blogs = Blog.query.all()
     return jsonify([blog.to_dict() for blog in blogs])
 
-
 @app.route('/blogs/<int:id>', methods=['GET'])
 def get_blog(id):
     blog = Blog.query.get_or_404(id)
     return jsonify(blog.to_dict())
-
 
 @app.route('/blogs', methods=['POST'])
 @jwt_required()
@@ -78,7 +74,6 @@ def create_blog():
     db.session.add(new_blog)
     db.session.commit()
     return jsonify(new_blog.to_dict()), 201
-
 
 @app.route('/blogs/<int:id>', methods=['PATCH'])
 @jwt_required()
@@ -97,7 +92,6 @@ def update_blog(id):
     db.session.commit()
     return jsonify(blog.to_dict())
 
-
 @app.route('/blogs/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_blog(id):
@@ -109,12 +103,10 @@ def delete_blog(id):
     db.session.commit()
     return jsonify({"message": "Blog deleted"}), 204
 
-
 @app.route('/tags', methods=['GET'])
 def get_tags():
     tags = Tag.query.all()
     return jsonify([tag.to_dict() for tag in tags])
-
 
 @app.route('/tags', methods=['POST'])
 @jwt_required()
@@ -125,12 +117,10 @@ def create_tag():
     db.session.commit()
     return jsonify(new_tag.to_dict()), 201
 
-
 @app.route('/tags/<int:id>', methods=['GET'])
 def get_tag(id):
     tag = Tag.query.get_or_404(id)
     return jsonify(tag.to_dict())
-
 
 @app.route('/tags/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -140,17 +130,18 @@ def delete_tag(id):
     db.session.commit()
     return jsonify({"message": "Tag deleted"}), 204
 
-
 @app.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify(user.to_dict())
-
 
 @app.route('/users/<int:id>/blogs', methods=['GET'])
 def get_user_blogs(id):
     blogs = Blog.query.filter_by(user_id=id).all()
     return jsonify([blog.to_dict() for blog in blogs])
 
-# if __name__ == '__main__':
-#     app.run(port=5555, debug=True)
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
