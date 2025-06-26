@@ -152,5 +152,5 @@ def get_user_blogs(id):
     blogs = Blog.query.filter_by(user_id=id).all()
     return jsonify([blog.to_dict() for blog in blogs])
 
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=5555, debug=True)

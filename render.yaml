@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: safe-space-backend
+    env: python
+    plan: free
+    buildCommand: cd server && pip install -r requirements.txt
+    startCommand: cd server && gunicorn app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 5555
+      - key: JWT_SECRET_KEY
+        value: super-secret-key
+      - key: SECRET_KEY
+        value: shhh-very-secret
