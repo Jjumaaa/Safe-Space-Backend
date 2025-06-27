@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app, 
      origins=[
          "http://localhost:3000", 
-         "https://safe-space-frontend.onrender.com/"
+         "https://safe-space-frontend.onrender.com"
      ],
      supports_credentials=True)
 
@@ -27,6 +27,14 @@ db.init_app(app)
 migrate = Migrate(app, db)
 api = Api(app)
 jwt = JWTManager(app)
+
+@app.after_request
+def apply_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "https://safe-space-frontend.onrender.com"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -147,9 +155,6 @@ def get_user(id):
 def get_user_blogs(id):
     blogs = Blog.query.filter_by(user_id=id).all()
     return jsonify([blog.to_dict() for blog in blogs])
-
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
